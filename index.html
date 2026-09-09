@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Closing the Loop — Quick Start Guide</title>
+  <meta name="description" content="Install the Closing the Loop plugin for Claude Code. From customer signal to shipped feature — discovery, prototyping, handover, and delivery in one loop.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&family=Open+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* Design tokens — Visma Product & UX Days 2026 visual identity
+       (single mode — dark by default, same identity as the Discovery guide) */
+    :root {
+      --bg-surface: rgba(15, 30, 60, 0.55);
+      --bg-subtle: #14223F;
+      --bg-dark-section: #001f3d;
+      --text-primary: #ffffff;
+      --text-secondary: #d0d8ee;
+      --text-muted: #9ba6c8;
+      --border-color: rgba(162, 174, 255, 0.18);
+      --border-strong: rgba(162, 174, 255, 0.38);
+      --accent: #A2AEFF;
+      --accent-bright: #BDC5FF;
+      --accent-gradient: linear-gradient(135deg, #BDC5FF, #7B89E8);
+      --ok: #6FDBB5;
+      --warn: #E8C468;
+      --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.28), 0 2px 8px rgba(0, 0, 0, 0.18);
+      --page-gradient: linear-gradient(135deg, #434180 0%, #003253 100%);
+      --font-body: 'Open Sans', 'Segoe UI', system-ui, sans-serif;
+      --font-display: 'Ubuntu', 'Segoe UI', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--page-gradient);
+      background-attachment: fixed;
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+
+    h1, h2, h3 { font-family: var(--font-display); }
+    .eyebrow {
+      font-family: var(--font-display); font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.15em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.7rem;
+    }
+    h1 { font-size: clamp(1.9rem, 5vw, 2.7rem); font-weight: 700; line-height: 1.15; }
+    .lede { font-size: 1.05rem; color: var(--text-secondary); margin-top: 1rem; max-width: 62ch; }
+    .lede strong { color: var(--text-primary); }
+
+    .lanes { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.85rem; margin-top: 2rem; }
+    .lane {
+      background: var(--bg-subtle); border: 1px solid var(--border-color); border-radius: 12px;
+      padding: 1.1rem 1.2rem; box-shadow: var(--shadow-card);
+    }
+    .lane h3 { font-size: 0.95rem; margin-bottom: 0.35rem; }
+    .lane h3 span { color: var(--accent); margin-right: 0.4rem; }
+    .lane p { font-size: 0.85rem; color: var(--text-muted); }
+
+    .step { margin-top: 3.5rem; }
+    .step-head { display: flex; align-items: baseline; gap: 0.9rem; margin-bottom: 1.1rem; }
+    .step-num {
+      font-family: var(--font-display); font-weight: 700; font-size: 0.85rem;
+      color: var(--accent); background: rgba(162,174,255,0.12); border: 1px solid var(--border-color);
+      border-radius: 8px; padding: 0.25rem 0.6rem; letter-spacing: 0.08em;
+    }
+    h2 { font-size: 1.35rem; font-weight: 700; }
+
+    .card {
+      background: var(--bg-subtle); border: 1px solid var(--border-color); border-radius: 12px;
+      padding: 1.25rem 1.4rem; box-shadow: var(--shadow-card); margin-bottom: 0.9rem;
+    }
+    .card h3 { font-size: 1rem; margin-bottom: 0.4rem; }
+    .card p, .card li { font-size: 0.92rem; color: var(--text-secondary); }
+    .card ul, .card ol { padding-left: 1.3rem; margin-top: 0.5rem; }
+    .card li { margin: 0.35rem 0; }
+    .muted { color: var(--text-muted); }
+    .small { font-size: 0.82rem; }
+
+    .warnbox {
+      border: 1px solid rgba(232,196,104,0.45); background: rgba(232,196,104,0.08);
+      border-radius: 12px; padding: 1.1rem 1.3rem; margin-bottom: 0.9rem;
+    }
+    .warnbox h3 { color: var(--warn); font-size: 0.95rem; margin-bottom: 0.35rem; }
+    .warnbox p { font-size: 0.9rem; color: var(--text-secondary); }
+
+    pre {
+      font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.7;
+      background: var(--bg-dark-section); border: 1px solid var(--border-color);
+      border-radius: 10px; padding: 0.9rem 1.1rem; overflow-x: auto; margin: 0.7rem 0;
+      color: var(--text-secondary);
+    }
+    pre .c { color: var(--text-muted); }
+    code {
+      font-family: var(--font-mono); font-size: 0.84em;
+      background: var(--bg-dark-section); padding: 0.12rem 0.4rem; border-radius: 5px;
+    }
+
+    table { border-collapse: collapse; width: 100%; font-size: 0.88rem; margin-top: 0.6rem; }
+    th { text-align: left; font-family: var(--font-display); font-size: 0.72rem; letter-spacing: 0.08em;
+         text-transform: uppercase; color: var(--text-muted); padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--border-strong); }
+    td { padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--border-color); color: var(--text-secondary); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    .tw { overflow-x: auto; }
+
+    .btn, .card a.btn {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      font-family: var(--font-display); font-weight: 700; font-size: 1rem;
+      color: #0d1530; background: var(--accent-gradient);
+      border: none; border-radius: 12px; padding: 0.9rem 1.7rem; cursor: pointer;
+      text-decoration: none; box-shadow: var(--shadow-card); margin: 0.6rem 0 0.3rem;
+    }
+    .btn:hover { filter: brightness(1.07); }
+    .btn-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.5rem; }
+
+    .journey {
+      font-family: var(--font-mono); font-size: 0.78rem; line-height: 1.9;
+      background: var(--bg-dark-section); border: 1px solid var(--border-color);
+      border-radius: 10px; padding: 1rem 1.2rem; overflow-x: auto; color: var(--text-secondary);
+    }
+    .journey b { color: var(--accent-bright); font-weight: 500; }
+
+    .faq-q { font-weight: 700; font-family: var(--font-display); font-size: 0.95rem; margin-bottom: 0.3rem; }
+
+    footer {
+      margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);
+      font-size: 0.82rem; color: var(--text-muted); line-height: 1.7;
+    }
+    footer a, .card a, .lede a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="eyebrow">Visma · internal plugin for Claude Code</div>
+    <h1>Closing the Loop</h1>
+    <p class="lede">One plugin that takes a feature the whole way: <strong>customer signal → validated prototype (built from your team's own components) → engineering handover → reviewed, shipped code</strong>. One source of truth, no copy-paste between tools — and nobody has to learn skill names.</p>
+
+    <div class="lanes">
+      <div class="lane"><h3><span>①</span>Discover &amp; prototype</h3><p>For PMs &amp; designers. Customer data → scored opportunity → PRD → clickable prototype made of your product's real components → usability test plan.</p></div>
+      <div class="lane"><h3><span>②</span>Hand over</h3><p>The PM→engineering seam. One ticket carries everything; the handover grounds it in the live codebase — with or without an approval gate, your team's choice.</p></div>
+      <div class="lane"><h3><span>③</span>Build &amp; ship</h3><p>For developers. “Take KEY to a PR” — plan, implement, test, review, release, and feed the learnings back. That's the loop closing.</p></div>
+    </div>
+
+    <!-- ============ STEP 00 ============ -->
+    <div class="step">
+      <div class="step-head"><span class="step-num">00</span><h2>Before you start</h2></div>
+
+      <div class="card">
+        <h3>You need</h3>
+        <ul>
+          <li>🔑 <strong>A paid Claude subscription</strong> (Pro/Team/Enterprise) with <strong>Claude Code</strong> — the desktop app's Code tab or the <code>claude</code> terminal.</li>
+          <li>🧾 <strong>A tracker connector</strong> for your team's Jira or Linear — needed from the moment you publish a ticket. Discovery alone needs none: <code>/plugin install linear@claude-plugins-official</code> (or <code>atlassian@…</code>), then authorize once.</li>
+          <li>🎨 <strong>Figma connector — optional.</strong> Adds design-vs-code checks and visual prototype verification. Everything runs without it.</li>
+          <li>💻 <strong>For developers:</strong> a checkout of the target repo and an authenticated <code>gh</code> CLI.</li>
+        </ul>
+      </div>
+
+      <div class="warnbox">
+        <h3>⚠️ Already have the Discovery to Prototype Engine plugin?</h3>
+        <p><strong>Uninstall it first</strong> (<code>/plugin</code> → uninstall). Closing the Loop contains everything it had, upgraded. If both stay installed, the same phrase can silently trigger the <em>old</em> skill instead of the new one — this has actually happened in a pilot, and it's confusing to debug. One phrase, one skill.</p>
+      </div>
+    </div>
+
+    <!-- ============ STEP 01 ============ -->
+    <div class="step">
+      <div class="step-head"><span class="step-num">01</span><h2>Download &amp; install</h2></div>
+
+      <div class="card">
+        <p>Visma's enterprise setup keeps plugins invisible across companies, so this plugin is distributed as a zip — same pattern as the Discovery Engine.</p>
+        <a class="btn" href="downloads/closing-the-loop-plugin.zip" id="downloadBtn" download>⬇︎&nbsp; Download closing-the-loop-plugin.zip</a>
+        <div class="btn-meta">v0.2.0 · ~850 KB · <a href="downloads/SHA256SUMS.txt">checksum</a></div>
+        <ol style="margin-top:1rem;">
+          <li><strong>Unzip it</strong> somewhere permanent — e.g. your home folder. You'll get a <code>closing-the-loop/</code> folder. Don't delete it after installing; the install points at it.</li>
+          <li><strong>Open a terminal</strong>, start Claude Code by typing <code>claude</code>, then run these two commands inside it:</li>
+        </ol>
+<pre>/plugin marketplace add ~/closing-the-loop
+/plugin install closing-the-loop@closing-the-loop</pre>
+        <ol start="3">
+          <li><strong>Verify:</strong> run <code>/plugin</code> — you should see <strong>closing-the-loop</strong> listed and enabled, with 74 skills. That's it — installed once, available in every project and in the desktop app too.</li>
+        </ol>
+        <p class="small muted" style="margin-top:0.6rem;">Updating later: download the new zip, replace the folder's contents, then <code>/plugin marketplace update closing-the-loop</code> + reinstall.</p>
+      </div>
+    </div>
+
+    <!-- ============ STEP 02 ============ -->
+    <div class="step">
+      <div class="step-head"><span class="step-num">02</span><h2>Start using it</h2></div>
+
+      <div class="card">
+        <h3>Say three words:</h3>
+        <pre>start CTL</pre>
+        <p>The front door checks what you have (connectors, config, your codebase), shows you the journey, and asks one question: <em>start from the beginning, jump to a specific point, or fix what's missing?</em> From there, everything is guided — every step ends with a checkpoint and a clear next move. No skill names to memorize, ever.</p>
+      </div>
+
+      <div class="card">
+        <h3>The journey one feature travels</h3>
+        <div class="journey">
+DISCOVER   <b>Stages 0–3</b>   Customer data → opportunities → scored choice → PRD<br>
+PROTOTYPE  <b>Stages 4–5</b>   Scan YOUR components → clickable prototype from them<br>
+VALIDATE   <b>Stage 6</b>      Experiment plan + usability test<br>
+PUBLISH    <b>—</b>            One tracker ticket; its key is the handoff<br>
+HAND OVER  <b>Stage 7</b>      Delivery Context (or governed Brief + sign-off)<br>
+BUILD      <b>—</b>            “Take &lt;KEY&gt; to a PR”<br>
+SHIP       <b>—</b>            Release, measure, feed learnings back
+        </div>
+        <p class="small muted" style="margin-top:0.7rem;">The prototype is real framework code importing your team's actual components — so engineering converts working code into the feature, not a picture. Anything the prototype couldn't use gets flagged honestly, with a fix-list.</p>
+      </div>
+
+      <div class="card">
+        <h3>Or jump straight to your lane</h3>
+        <div class="tw"><table>
+          <tr><th>You are…</th><th>Say…</th></tr>
+          <tr><td>A PM/designer with customer signal</td><td><code>Run the full discovery to prototype workflow</code></td></tr>
+          <tr><td>A PM with a validated prototype</td><td><code>Create a ticket</code></td></tr>
+          <tr><td>A PM/BA/tech lead with a ticket to make implementable</td><td><code>Create a handover from &lt;KEY&gt;</code></td></tr>
+          <tr><td>A developer with a ready ticket</td><td><code>Take &lt;KEY&gt; to a PR</code></td></tr>
+          <tr><td>Not sure — drive the whole arc</td><td><code>Close the loop on &lt;KEY&gt;</code></td></tr>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ============ STEP 03 ============ -->
+    <div class="step">
+      <div class="step-head"><span class="step-num">03</span><h2>Help &amp; support</h2></div>
+
+      <div class="card">
+        <div class="faq-q">The plugin doesn't show up after install</div>
+        <p class="small">Run <code>/plugin</code> in a fresh session. If the marketplace add failed, check the path points at the unzipped <code>closing-the-loop</code> folder (the one containing <code>skills/</code>). In the desktop app, plugins installed via terminal appear after a restart.</p>
+      </div>
+      <div class="card">
+        <div class="faq-q">A skill behaves like an older version</div>
+        <p class="small">You probably still have the standalone Discovery Engine plugin (or personal copies of its skills) installed — see step 00. Uninstall it; Closing the Loop supersedes it.</p>
+      </div>
+      <div class="card">
+        <div class="faq-q">Setup says it can't see my Jira/Linear</div>
+        <p class="small">The connector isn't attached to <em>this</em> surface. Install it where you work (terminal: <code>/plugin install linear@claude-plugins-official</code>; desktop app: Settings → Connectors) and authorize it once.</p>
+      </div>
+      <div class="card">
+        <div class="faq-q">Something went wrong mid-stage / I want to re-run one stage</div>
+        <p class="small">Every stage saves its output as a file, so nothing is lost. Say <code>continue from stage N</code>, or jump: <code>I already have a PRD</code>. Type <code>/</code> to see every skill and run one directly.</p>
+      </div>
+      <div class="card">
+        <div class="faq-q">Feedback — anytime, 30 seconds, anonymous</div>
+        <p class="small">In any session, say <code>give feedback</code> — a 1–5 rating plus an optional comment. You don't need to finish anything first. It genuinely steers what we improve next.</p>
+      </div>
+    </div>
+
+    <footer>
+      <strong>Privacy &amp; telemetry:</strong> the plugin sends anonymous usage events (skill name, stage id, a hashed machine id — never prompts, file contents, ticket keys, names, or emails) so we can see adoption and where people get stuck. Opt out anytime with <code>export CLOSING_THE_LOOP_TELEMETRY_DISABLED=1</code>. This page counts views and downloads the same anonymous way.<br><br>
+      <a href="dashboard/">📊 Live usage dashboard</a> &nbsp;·&nbsp;
+      <a href="https://github.com/Visma-AI-Engineering-Technology/closing-the-loop">GitHub repository &amp; full docs</a> &nbsp;·&nbsp;
+      Maintained by the Closing the Loop team (Product Discovery × AI Engineering)
+    </footer>
+  </div>
+
+  <script>
+    // Anonymous page telemetry — same webhook as the plugin's own telemetry.
+    const TELEMETRY_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyVcaO1U0pyQiuciA2CSbr-q16ZhXXrVqXZY0NJK5k7jpq3gY_vD-Yf2bg_jEleHxjUcg/exec";
+
+    function getVisitorHash() {
+      try {
+        const KEY = 'closing-the-loop-guide:visitor-id';
+        let id = localStorage.getItem(KEY);
+        if (!id) {
+          id = (crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(36).slice(2);
+          localStorage.setItem(KEY, id);
+        }
+        return id;
+      } catch (e) { return 'anonymous'; }
+    }
+
+    function fireTelemetry(eventType, extra) {
+      try {
+        const payload = {
+          timestamp: new Date().toISOString(),
+          event_type: eventType,
+          user_hash: getVisitorHash(),
+          plugin_version: 'guide-page',
+          extra: extra || ''
+        };
+        fetch(TELEMETRY_WEBHOOK_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload),
+          keepalive: true
+        }).catch(() => {});
+      } catch (e) { /* never break the page over telemetry */ }
+    }
+
+    fireTelemetry('page_viewed');
+    document.getElementById('downloadBtn').addEventListener('click', function () {
+      fireTelemetry('download_clicked', 'closing-the-loop-plugin.zip');
+    });
+  </script>
+</body>
+</html>
