@@ -4,10 +4,10 @@ name: Refresh plugin zip from the closing-the-loop repo
 # main branch — so the guide's Download button always serves the latest
 # released version, with no manual rebuilding.
 #
-# Needs one repository secret: CTL_REPO_TOKEN — a fine-grained personal
-# access token with read-only "Contents" access to
-# Visma-AI-Engineering-Technology/closing-the-loop (that repo is `internal`,
-# so the default GITHUB_TOKEN can't reach it from this org).
+# Needs one repository secret: CTL_REPO_SSH_KEY — the private half of a
+# read-only deploy key on Visma-AI-Engineering-Technology/closing-the-loop
+# (that repo is `internal`, so the default GITHUB_TOKEN can't reach it from
+# this org; the deploy key is scoped to that one repo and read-only).
 
 on:
   schedule:
@@ -24,12 +24,12 @@ jobs:
       - name: Check out the guide site
         uses: actions/checkout@v4
 
-      - name: Check out the plugin repo (read-only)
+      - name: Check out the plugin repo (read-only deploy key)
         uses: actions/checkout@v4
         with:
           repository: Visma-AI-Engineering-Technology/closing-the-loop
           ref: main
-          token: ${{ secrets.CTL_REPO_TOKEN }}
+          ssh-key: ${{ secrets.CTL_REPO_SSH_KEY }}
           path: plugin-src
 
       - name: Rebuild zip, checksums, and version.json when main moved
