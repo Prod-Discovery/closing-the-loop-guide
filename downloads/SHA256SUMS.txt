@@ -1,1 +1,1 @@
-e926c58d983535da3f67d056257422531f27940fc1425c721681bf454347d5bd  closing-the-loop-plugin.zip
+ddc4e9f11e35f616ab244bb54f543ed53b8e356c107dfbe6e2f522f391f70516  closing-the-loop-plugin.zip
