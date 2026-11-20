@@ -32,6 +32,20 @@ jobs:
           ssh-key: ${{ secrets.CTL_REPO_SSH_KEY }}
           path: plugin-src
 
+      # Claude's plugin upload is stricter than Claude Code (no zip inside the zip, description
+      # limits, ...). The plugin repo checks this on every PR; checking again here means a zip
+      # the upload would refuse is never published, whatever reached main. A failure stops the
+      # run before anything is rebuilt, so the last good zip stays up.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate plugin main against Claude's upload rules
+        working-directory: plugin-src
+        run: |
+          pip install --quiet pyyaml
+          python scripts/validate-plugin-upload.py HEAD
+
       - name: Rebuild zip, checksums, and version.json when main moved
         run: |
           set -euo pipefail
